@@ -1,0 +1,30 @@
+# Collector specific configuration
+
+data_types:
+  - allocations
+  - donor-contributions
+
+allocations:
+  source_url: "http://cerfgms-webapi.unocha.org/v1/hdxproject/all.json"
+  nested_variables:
+    sectorName: projectsectors
+    clusterName: projectclusters
+    capCode: projectcapcodes
+    groupingName: projectgroupings
+  aggregation_method: "list"
+  title: "CERF Allocations"
+  notes: "This dataset lists project funding allocations from OCHA's Central Emergency Response Fund (CERF). CERF allocations are made to ensure a rapid response to sudden-onset emergencies or to rapidly deteriorating conditions in an existing emergency and to support humanitarian response activities within an underfunded emergency."
+
+donor-contributions:
+  source_url: "http://cerfgms-webapi.unocha.org/v1/donorcontribution.json"
+  nested_variables:
+    commitmentamountUSD: donorcommitment
+    pledgeAmountUSD: donorpledge
+    receivedamountUSD: donorreceived
+    writeoffamountUSD: donorwriteoff
+  aggregation_method: "sum"
+  title: "CERF Donor Contributions"
+  notes: "This dataset lists all contributions made by donors to the Central Emergency Response Fund (CERF). CERF receives broad support from United Nations Member States, observers, regional governments and international organizations, and the private sector, including corporations, non-governmental organizations and individuals."
+
+tags:
+  - "funding"
