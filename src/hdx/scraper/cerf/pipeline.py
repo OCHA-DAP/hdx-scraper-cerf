@@ -2,10 +2,12 @@
 """CERF scraper"""
 
 import logging
+from datetime import datetime
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
 from hdx.data.resource import Resource
+from hdx.utilities.dateparse import parse_date
 from hdx.utilities.dictandlist import dict_of_lists_add
 from hdx.utilities.retriever import Retrieve
 from slugify import slugify
@@ -14,10 +16,17 @@ logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-    def __init__(self, configuration: Configuration, retriever: Retrieve, tempdir: str):
+    def __init__(
+        self,
+        configuration: Configuration,
+        retriever: Retrieve,
+        tempdir: str,
+        today: datetime,
+    ):
         self._configuration = configuration
         self._retriever = retriever
         self._tempdir = tempdir
+        self._today = today
         self.data = {}
         self.dates = {}
         self.headers = {}
@@ -73,7 +82,10 @@ class Pipeline:
             }
         )
 
-        dataset.set_time_period(min(self.dates[data_type]), max(self.dates[data_type]))
+        end_date = max(self.dates[data_type])
+        if parse_date(end_date) > self._today:
+            end_date = self._today
+        dataset.set_time_period(min(self.dates[data_type]), end_date)
         dataset.add_tags(self._configuration["tags"])
         dataset.add_other_location("world")
 

@@ -1,6 +1,7 @@
 from os.path import join
 
 from hdx.utilities.compare import assert_files_same
+from hdx.utilities.dateparse import parse_date
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
@@ -24,7 +25,8 @@ class TestPipeline:
                     save=False,
                     use_saved=True,
                 )
-                pipeline = Pipeline(configuration, retriever, tempdir)
+                today = parse_date("05-18-2026")
+                pipeline = Pipeline(configuration, retriever, tempdir, today)
                 pipeline.get_data()
 
                 dataset = pipeline.generate_dataset("allocations")
@@ -35,7 +37,7 @@ class TestPipeline:
                     "name": "cerf-allocations",
                     "title": "CERF Allocations",
                     "notes": "This dataset lists project funding allocations from OCHA's Central Emergency Response Fund (CERF). CERF allocations are made to ensure a rapid response to sudden-onset emergencies or to rapidly deteriorating conditions in an existing emergency and to support humanitarian response activities within an underfunded emergency.",
-                    "dataset_date": "[2006-03-15T00:00:00 TO 2026-10-24T23:59:59]",
+                    "dataset_date": "[2006-03-15T00:00:00 TO 2026-05-18T23:59:59]",
                     "tags": [
                         {
                             "name": "funding",
