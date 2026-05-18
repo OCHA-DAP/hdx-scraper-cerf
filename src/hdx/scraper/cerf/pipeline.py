@@ -55,7 +55,7 @@ class Pipeline:
                             dict_of_lists_add(self.dates, data_type, value[:10])
                 for key, value in aggregate_row.items():
                     if aggregation_method == "list":
-                        new_row[key] = ", ".join(set(value))
+                        new_row[key] = ", ".join(sorted(list(set(value))))
                     if aggregation_method == "sum":
                         new_row[key] = sum(value)
                 dict_of_lists_add(self.data, data_type, new_row)
