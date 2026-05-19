@@ -29,22 +29,22 @@ class TestPipeline:
                 pipeline = Pipeline(configuration, retriever, tempdir, today)
                 pipeline.get_data()
 
-                dataset = pipeline.generate_dataset("allocations")
+                dataset = pipeline.generate_dataset("allocations", "SDN")
                 dataset.update_from_yaml(
                     path=join(config_dir, "hdx_dataset_static.yaml")
                 )
                 assert dataset == {
-                    "name": "cerf-allocations",
-                    "title": "CERF Allocations",
-                    "notes": "This dataset lists project funding allocations from OCHA's Central Emergency Response Fund (CERF). CERF allocations are made to ensure a rapid response to sudden-onset emergencies or to rapidly deteriorating conditions in an existing emergency and to support humanitarian response activities within an underfunded emergency.",
-                    "dataset_date": "[2006-03-15T00:00:00 TO 2026-05-18T23:59:59]",
+                    "name": "cerf-allocations-sdn",
+                    "title": "Sudan - CERF Allocations",
+                    "notes": "This dataset lists project funding allocations from OCHA's Central Emergency Response Fund (CERF) for Sudan. CERF allocations are made to ensure a rapid response to sudden-onset emergencies or to rapidly deteriorating conditions in an existing emergency and to support humanitarian response activities within an underfunded emergency.",
+                    "dataset_date": "[2006-05-11T00:00:00 TO 2026-05-06T23:59:59]",
                     "tags": [
                         {
                             "name": "funding",
                             "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                         }
                     ],
-                    "groups": [{"name": "world"}],
+                    "groups": [{"name": "sdn"}],
                     "license_id": "cc-by-igo",
                     "methodology": "Registry",
                     "caveats": "None",
@@ -59,7 +59,7 @@ class TestPipeline:
                 resources = dataset.get_resources()
                 assert resources == [
                     {
-                        "name": "CERF Allocations.csv",
+                        "name": "SDN CERF Allocations.csv",
                         "description": "",
                         "format": "csv",
                     },
@@ -70,16 +70,16 @@ class TestPipeline:
                         "format": "json",
                     },
                 ]
-                file = "CERF Allocations.csv"
+                file = "SDN CERF Allocations.csv"
                 assert_files_same(join(fixtures_dir, file), join(tempdir, file))
 
-                dataset = pipeline.generate_dataset("donor-contributions")
+                dataset = pipeline.generate_dataset("donor-contributions", "world")
                 dataset.update_from_yaml(
                     path=join(config_dir, "hdx_dataset_static.yaml")
                 )
                 assert dataset == {
                     "name": "cerf-donor-contributions",
-                    "title": "CERF Donor Contributions",
+                    "title": "Global - CERF Donor Contributions",
                     "notes": "This dataset lists all contributions made by donors to the Central Emergency Response Fund (CERF). CERF receives broad support from United Nations Member States, observers, regional governments and international organizations, and the private sector, including corporations, non-governmental organizations and individuals.",
                     "dataset_date": "[2015-07-03T00:00:00 TO 2026-05-12T23:59:59]",
                     "tags": [

@@ -34,6 +34,7 @@ def configuration(config_dir):
     # Change locations below to match those needed in tests
     Locations.set_validlocations(
         [
+            {"name": "sdn", "title": "Sudan"},
             {"name": "world", "title": "World"},
         ]
     )

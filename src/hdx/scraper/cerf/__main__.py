@@ -62,25 +62,27 @@ def main(
             pipeline.get_data()
 
             for data_type in configuration["data_types"]:
-                dataset = pipeline.generate_dataset(data_type)
-                if dataset:
-                    dataset.update_from_yaml(
-                        script_dir_plus_file(
-                            join("config", "hdx_dataset_static.yaml"), main
+                for country_iso in pipeline.data[data_type]:
+                    dataset = pipeline.generate_dataset(data_type, country_iso)
+                    if dataset:
+                        dataset.update_from_yaml(
+                            script_dir_plus_file(
+                                join("config", "hdx_dataset_static.yaml"), main
+                            )
                         )
-                    )
-                    dataset.create_in_hdx(
-                        remove_additional_resources=True,
-                        match_resource_order=False,
-                        updated_by_script=_UPDATED_BY_SCRIPT,
-                        batch=info["batch"],
-                        ignore_fields=["resource:description"],
-                    )
+                        dataset.create_in_hdx(
+                            remove_additional_resources=True,
+                            match_resource_order=False,
+                            updated_by_script=_UPDATED_BY_SCRIPT,
+                            batch=info["batch"],
+                            ignore_fields=["resource:description"],
+                        )
 
 
 if __name__ == "__main__":
     facade(
         main,
+        hdx_site="stage",
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_LOOKUP,
         project_config_yaml=script_dir_plus_file(
