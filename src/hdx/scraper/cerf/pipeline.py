@@ -6,6 +6,7 @@ from datetime import datetime
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.data.hdxobject import HDXError
 from hdx.data.resource import Resource
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date
@@ -113,7 +114,11 @@ class Pipeline:
         if country_iso == "world":
             dataset.add_other_location("world")
         else:
-            dataset.add_country_location(country_iso)
+            try:
+                dataset.add_country_location(country_iso)
+            except HDXError:
+                logger.error(f"Could not find country iso {country_iso}")
+                return None
 
         # Add resources
         resource_name = f"{dataset_info['title']}.csv"
