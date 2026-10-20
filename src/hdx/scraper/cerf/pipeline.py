@@ -74,14 +74,16 @@ class Pipeline:
                     if "latestDateAsDate" in new_row
                     else "dateUSGSignature"
                 )
-                date_val = parse_date(new_row[date_col])
                 if data_type == "allocations":
-                    country_code = new_row["countryCode"]
-                    dict_of_lists_add(self.data[data_type], country_code, new_row)
-                    dict_of_lists_add(self.dates[data_type], country_code, date_val)
+                    key = new_row["countryCode"]
                 else:
-                    dict_of_lists_add(self.data[data_type], "world", new_row)
-                    dict_of_lists_add(self.dates[data_type], "world", date_val)
+                    key = "world"
+                dict_of_lists_add(self.data[data_type], key, new_row)
+                # Placeholder projects e.g. CERF-MOZ-26-RR-1527(TBD) have no
+                # dateUSGSignature
+                date_str = new_row.get(date_col)
+                if date_str:
+                    dict_of_lists_add(self.dates[data_type], key, parse_date(date_str))
         return
 
     def generate_dataset(self, data_type: str, country_iso: str) -> Dataset | None:
@@ -105,7 +107,10 @@ class Pipeline:
             notes = notes.replace(" for Global", "")
         dataset["notes"] = notes
 
-        dates = self.dates[data_type][country_iso]
+        dates = self.dates[data_type].get(country_iso)
+        if not dates:
+            logger.error(f"No dates for {data_type} in {country_iso}")
+            return None
         end_date = max(dates)
         if end_date > self._today:
             end_date = self._today
